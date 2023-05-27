@@ -1,4 +1,5 @@
 require('./config/dotenv');
+require('express-async-errors');
 
 const express = require('express');
 const { initDatabase } = require('./config/db');
@@ -27,6 +28,11 @@ app.use('/api/experiencias', experienciasRoute);
 app.use('/api/portfolio', portfolioRoute);
 
 initDatabase();
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send({'Erro': err.message});
+});
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
